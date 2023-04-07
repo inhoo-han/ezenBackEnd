@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>servletAPI</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+  </welcome-file-list>
+  <!-- xml을 이용하여 load-on-startup기능 사용 방법 -->
+  <servlet>
+  	<!-- 매핑이름 -->
+  	<servlet-name>loadConfig</servlet-name>
+  	<!-- 패키지 이름 -->
+  	<servlet-class>servletAPI.ex06.LoadAppConfig</servlet-class>
+  	<!-- 우선순위 결정 -->
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- 회원에 관해 -->
+  <context-param>
+  	<param-name>menu_member</param-name>
+  	<param-value>회원등록 회원조회 회원수정 회원삭제</param-value>
+  </context-param>
+  <!-- 주문에 관해 -->
+  <context-param>
+  	<param-name>menu_order</param-name>
+  	<param-value>주문조회 주문등록 주문수정 주문취소</param-value>
+  </context-param>
+  <!-- 상품에 관해 -->
+  <context-param>
+  	<param-name>menu_goods</param-name>
+  	<param-value>상품조회 상품등록 상품수정 상품삭제</param-value>
+  </context-param>
+</web-app>
