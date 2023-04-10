@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원가입창</title>
+<script type="text/javascript">
+	function fn_sendMember() {
+		let frmMem = document.frmMember;
+		let id = frmMem.id.value;
+		let pwd = frmMem.pwd.value;
+		let name = frmMem.name.value;
+		let email = frmMem.name.value;
+		
+		if(id.length == 0 || id == ""){
+			alert("아이디는 필수 입력사항입니다.");
+		}else if(pwd.length == 0 || pwd == ""){
+			alert("비밀번호는 필수 입력사항입니다.");
+		}else if(name.length == 0 || name == ""){
+			alert("이름은 필수 입력사항입니다.");
+		}else{
+			//전송할 방법을 지정. post/get
+			frmMem.method = "post";
+			//회원가입창에서 회원정보를 입력 후 전송할 페이지
+			//                   ↓여기 변경
+			frmMem.action = "member5.jsp";
+			//서버로 전송.
+			frmMem.submit();
+		}
+	}
+</script>
+</head>
+<body>
+	<h2>😎😎 회원가입 하세용 😎😎</h2>
+	<form name="frmMember">
+		<table>
+			<th>회원가입</th>
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" name="id"></td>
+			</tr>
+			<tr>
+				<td>비밀번호</td>
+				<td><input type="password" name="pwd"></td>
+			</tr>
+			<tr>
+				<td>이름</td>
+				<td><input type="text" name="name"></td>
+			</tr>
+			<tr>
+				<td>이메일</td>
+				<td><input type="email" name="email"></td>
+			</tr>
+		</table>
+		<input type="hidden" name="command" value="addMember">
+		<input type="button"  value="회원가입" onclick="fn_sendMember();">
+		<input type="reset" value="다시입력">
+	</form>
+</body>
+</html>
