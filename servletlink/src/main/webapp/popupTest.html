@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>쿠키를 사용한 팝업 제한</title>
+<script type="text/javascript">
+	let notShowPopup;
+	window.onload = function() {
+		notShowPopup = getCookieValue();
+		if(notShowPopup != "true"){
+			window.open("popup.html", "popup", "width=300, height=300");
+		}
+	}
+	
+	//쿠키 정보를 읽어오는 함수
+	function getCookieValue() {
+		let result="false";
+		let cookie, element, value;
+		if(document.cookie != ""){
+			cookie = document.cookie.split(";");
+			for(let i=0; i<cookie.length; i++){
+				element = cookie[i].split("=");
+				value=element[0];
+				//문자열의 공백을 제거하는 정규표현식
+				value=value.replace(/^\s*/,"");
+				//notShowPop이라는 이름을 가진 쿠키가 있냐고 묻는 것
+				if(value == "notShowPop") {
+					result = element[i];
+				}
+			}
+		}
+		return result;
+	}
+	
+	//쿠키 삭제 함수
+	function deleteCookie() {
+		//                                    ↓expires를 -1로 주면 쿠키가 삭제됨
+		document.cookie = "notShowPop=false;path=/;expires=-1";
+	}
+</script>
+</head>
+<body>
+	<h1>👀여기는 메인페이지입니다.👀</h1>
+	<p>💕쿠키와 관련된 수업중 . . .<p>
+	<input type="button" value="쿠키삭제" onclick="deleteCookie()">
+</body>
+</html>

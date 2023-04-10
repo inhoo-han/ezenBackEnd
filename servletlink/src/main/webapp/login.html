@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>로그인 창</title>
+</head>
+<body>
+	<form action="/servletlink/login2" name="frmlogin" method="post">
+		<label for="user_id">아이디</label>
+		<input type="text" id="user_id" name="user_id"><br>
+		<label for="user_pwd">비밀번호</label>
+		<input type="password" id="user_pwd" name="user_pwd"><br>
+		<input type="hidden" name="user_hp" value="010-0401-1031">
+		<input type="hidden" name="user_email" value="baekho@birth.day">
+		<input type="hidden" name="user_address" value="백호시 행복하구">
+		<input type="submit" value="로그인">
+		<input type="reset" value="다시입력">
+	</form>
+</body>
+</html>

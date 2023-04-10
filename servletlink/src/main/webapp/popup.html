@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>알림창</title>
+<script type="text/javascript">
+	function setPopup(obj){
+		if(obj.checked==true) {
+			let exDate = new Date();
+			let days = 1;
+			exDate.setDate(exDate.getDate()+days);
+			document.cookie = "notShowPop=true;path=/; expires="+exDate.toGMTString();
+			window.close();
+		}
+		
+	}
+</script>
+</head>
+<body>
+	<h3>👀공지사항👀</h3>
+	<p>💕끝까지 코로나 방심하지 맙시다.<p>
+	<p>💕월요일은 Session수업!<p>
+	<p>💕즐거운 주말 보내세요</p>
+	<input type="checkbox" onclick="setPopup(this)">오늘 더 이상 팝업 띄우지 않기
+</body>
+</html>
