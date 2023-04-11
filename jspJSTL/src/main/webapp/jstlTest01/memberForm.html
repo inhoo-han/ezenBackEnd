@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입창</title>
+<!-- member8.jsp하면서 script지움
 <script type="text/javascript">
 	function fn_sendMember() {
 		let frmMem = document.frmMember;
@@ -22,16 +23,16 @@
 			frmMem.method = "post";
 			//회원가입창에서 회원정보를 입력 후 전송할 페이지
 			//                   ↓여기 변경
-			frmMem.action = "member5.jsp";
+			frmMem.action = "member8.jsp";
 			//서버로 전송.
 			frmMem.submit();
 		}
 	}
-</script>
+</script> -->
 </head>
 <body>
 	<h2>😎😎 회원가입 하세용 😎😎</h2>
-	<form name="frmMember">
+	<form name="frmMember" action="member8.jsp" method="post">
 		<table>
 			<th>회원가입</th>
 			<tr>
@@ -51,8 +52,7 @@
 				<td><input type="email" name="email"></td>
 			</tr>
 		</table>
-		<input type="hidden" name="command" value="addMember">
-		<input type="button"  value="회원가입" onclick="fn_sendMember();">
+		<input type="submit"  value="회원가입">
 		<input type="reset" value="다시입력">
 	</form>
 </body>
