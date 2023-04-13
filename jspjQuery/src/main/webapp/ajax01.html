@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>제이쿼리 활용</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+	function fn_server(){
+		$.ajax({
+			//전송 방식
+			type: "get",
+			//응답에 대한 값을 돌려받을 형식
+			dataType: "text",
+			//true: 비동기, false: 동기
+			async: false,
+			//데이터를 보내는 주소
+			url: "http://localhost:8090/jspjQuery/ajax1",
+			//서버에 전송할 자료 {매개변수명 : 담길 값}
+			data: {jq: "제이쿼리 ajax 공부 중"},
+			//success: 통신 성공했을 때 수행할 것
+			//rpdata: 서버로부터 응답받은 내용을 담은 변수
+			success: function(rpdata, textStatus){
+				$('#message').append(rpdata);
+			},
+			//error: 서버와의 통신 에러가 나 통신에 실패했을 때 수행할 것
+			error: function(){
+				alert("서버와 통신 에러가 발생하였습니다.");
+			},
+			//complete: 
+			complete: function() {
+				alert("서버와 통신 작업 완료!!");
+			}
+		});
+	}
+</script>
+</head>
+<body bgcolor="#eee" align="center">
+	<h2 align="center">😎JSP Ajax활용😎</h2>
+	<h3 align="center"><i>ㅡAjax(Asynchronous JavaScript and XML)ㅡ</i></h3>
+	<hr>
+	<input type="button" value="전송하기" onclick="fn_server()">
+	<div id="message"></div>
+</body>
+</html>

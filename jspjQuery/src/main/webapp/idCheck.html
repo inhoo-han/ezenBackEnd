@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>아이디 중복 확인</title>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+	function fn_idCheck() {
+		let _id = $('#chk_id').val();
+		if(_id == "") {
+			alert("중복확인할 ID를 입력하세요.");
+			return;
+		}
+		$.ajax({
+			type: "post",
+			async: true,
+			dataType: "text",
+			url: "http://localhost:8090/jspjQuery/member",
+			data: {id : _id},
+			success: function(idChkVal, textStatus) {
+				if(idChkVal == 'useable'){
+					$("#resultMessage").html("<p>사용할 수 있는 ID입니다.</p>");
+					$("#resultMessage").css("background-color", "#e3fdc8");
+					$("#btn_duplicate").prop("disabled", true);
+				} else{
+					$("#resultMessage").html("<p>사용할 수 없는 ID입니다.</p>");
+					$("#resultMessage").css("background-color", "#ffe3c8");
+				}
+			},
+			error: function() {
+				alert("서버와 통신 중 에러가 발생하였습니다.");
+			}
+		})
+	}
+</script>
+</head>
+<body bgcolor="#eee" align="center">
+	<h2 align="center">😎아이디 중복 확인😎</h2>
+	<h3 align="center"><i>ㅡ회원가입 필수템ㅡ</i></h3>
+	<hr>
+	<input type="text" id="chk_id">
+	<input type="button" id="btn_duplicate" value="ID중복확인" onclick="fn_idCheck()">
+	
+	<div id="resultMessage"></div>
+</body>
+</html>

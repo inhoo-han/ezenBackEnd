@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>제이쿼리 활용</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+	function fn_server(){
+		$.ajax({
+			type: "post",
+			dataType: "xml",
+			async: false,
+			url: "http://localhost:8090/jspjQuery/ajax2",
+			success: function(info, textStatus){
+				//여기 달라
+				$(info).find("book").each(function() {
+					let title = $(this).find("title").text();
+					let writer = $(this).find("writer").text();
+					let image = $(this).find("image").text();
+					$("#bookInfo").append("<p>📖 제목 : " + title + "</p>" + 
+					"<p>📖 저자 : " + writer + "</p>" + 
+					"<p>📖 사진 : <br><img src=" + image + " width=300 height=450><br><br>");
+				});
+			},
+			error: function(){
+				alert("서버와 통신 에러가 발생하였습니다.");
+			},
+			complete: function() {
+				alert("서버와 통신 작업 완료!!");
+			}
+		});
+	}
+</script>
+</head>
+<body bgcolor="#eee" align="center">
+	<h2 align="center">😎JSP Ajax활용😎</h2>
+	<h3 align="center"><i>ㅡAjax(Asynchronous JavaScript and XML)ㅡ</i></h3>
+	<hr>
+	<input type="button" value="신간 도서 정보 보기" onclick="fn_server()">
+	<div id="bookInfo"></div>
+</body>
+</html>
