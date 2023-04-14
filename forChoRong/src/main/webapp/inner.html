@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<link href="https://webfontworld.github.io/PyeongChang/PyeongChangPeace.css" rel="stylesheet">
+<style>
+*{
+	margin: 0;
+	padding: 0;
+	font-family: 'PyeongChangPeace';
+	text-decoration: none;
+	box-sizing: border-box;
+	color: #333;
+}
+body{
+	background: fff8b2;
+	font-family: 'PyeongChangPeace';
+}
+h1{
+	margin: 20px;
+	font-size: 80px;
+}
+h3{
+	margin-bottom: 50px;
+	font-size: 40px;
+}
+img{
+	margin-top: 50px;
+	width: 300px;
+	border-radius: 20px;
+}
+table, th, td, tr{
+	display: inline-block;
+	margin: 0px auto;
+	line-height: 50px;
+	font-family: 'PyeongChangPeace';
+	font-weight: bold;
+	color: #333;
+}
+table{
+	width: 500px;
+}
+.title{
+	margin: 20px auto;
+	border: none;
+	border-radius: 20px;
+	background: #fff;
+	text-align: center;
+	width: 500px;
+	font-size: 30px;
+}
+.label{
+	width: 150px;
+}
+.input{
+	width: 320px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	line-height: 1.2em;
+	padding: 5px;
+}
+td{
+	white-space: normal;
+	word-break: keep-all;
+}
+#inputMessage{
+	height: 200px;
+	white-space: normal;
+	word-break: keep-all;
+}
+.inputbtn{
+	display: block;
+	margin: 20px auto;
+	width: 300px;
+	border: 10px solid lightpink;
+	border-radius: 20px;
+	background: #fff;
+	line-height: 50px;
+	font-family: 'PyeongChangPeace';
+	font-size: 20px;
+	font-weight: bold;
+	transition: background 1s;
+	color: #333;
+}
+.inputbtn:hover{
+	margin: 17px auto;
+}
+</style>
+</head>
+<body align="center" bgcolor="#fff8b2">
+	<h1>이초롱 생일 축하해</h1>
+	<h3>🎉모두 초롱이의 생일을 축하해 주세요🎉</h3>
+	<hr>
+		<form name="guessbook" action="insertText.jsp" method="post">
+		<table align="center">
+			<th class="title">메시지 입력하기</th>
+			<tr>
+				<td class="label">이름</td>
+				<td><input type="text" name="name" id="inputName" class="input"></td>
+			</tr>
+			<tr>
+				<td class="label">비밀번호</td>
+				<td><input type="password" name="pwd" id="inputPassword" class="input"></td>
+			</tr>
+			<tr>
+				<td class="label">메시지</td>
+				<td style="word-break: break-all"><input style="word-break: break-all" type="text" name="message" id="inputMessage" class="input"></td>
+			</tr>
+		</table>
+		<input type="submit" value="메시지 등록하기" class="inputbtn">
+	</form>
+</body>
+</html>
