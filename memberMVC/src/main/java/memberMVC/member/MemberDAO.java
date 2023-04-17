@@ -61,6 +61,93 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return memberList;
-		
+	}
+	
+	//회원 등록 메서드
+	public void addMember(MemberVO memberVO) {
+		try {
+			conn = dataFactory.getConnection();
+			String id = memberVO.getId();
+			String pwd = memberVO.getPwd();
+			String name = memberVO.getName();
+			String email = memberVO.getEmail();
+			String query = "insert into membertbl (id,pwd,name,email) values(?,?,?,?)";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pwd);
+			pstmt.setString(3, name);
+			pstmt.setString(4, email);
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			System.out.println("DB등록 중 에러!!");
+			e.printStackTrace();
+		}
+	}
+	
+	//수정할 회원정보 찾기 메서드
+	public MemberVO findMember(String _id) {
+		MemberVO memFindInfo = null;
+		try {
+			conn = dataFactory.getConnection();
+			String query = "select * from membertbl where id=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, _id);
+			ResultSet rs = pstmt.executeQuery();
+			//자료 헤더에서 1번자료로 넘어오기 위한 .next()
+			rs.next();
+			String id = rs.getString("id");			//수정X
+			String pwd = rs.getString("pwd");		//수정O
+			String name = rs.getString("name");		//수정O
+			String email = rs.getString("email");	//수정O
+			Date joinDate = rs.getDate("joinDate");	//수정X
+			
+			memFindInfo = new MemberVO(id, pwd, name, email, joinDate);
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("회원정보 찾는 중 오류");
+			e.printStackTrace();
+		}
+		return memFindInfo;
+	}
+	
+	//회원 정보 수정하기 메서드
+	public void modMember(MemberVO memberVO) {
+		String id = memberVO.getId();
+		String pwd = memberVO.getPwd();
+		String name = memberVO.getName();
+		String email = memberVO.getEmail();
+		try {
+			conn = dataFactory.getConnection();
+			String query = "update membertbl set pwd=?, name=?, email=? where id=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, pwd);
+			pstmt.setString(2, name);
+			pstmt.setString(3, email);
+			pstmt.setString(4, id);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("회원정보 수정 중 에러");
+			e.printStackTrace();
+		}
+	}
+	
+	//회원 삭제 메서드
+	public void delMember(String _id) {
+		try {
+			conn = dataFactory.getConnection();
+			String query = "delete from membertbl where id=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, _id);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("회원 삭제 중 오류");
+			e.printStackTrace();
+		}
 	}
 }
