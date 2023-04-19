@@ -1,5 +1,6 @@
 package memberMVC.board;
 
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -29,7 +30,7 @@ public class BoardDAO {
 			dataFactory = (DataSource)envContext.lookup("jdbc/oracle");
 			
 		} catch (Exception e) {
-			System.out.println("오라클 연결 실패");
+			System.out.println("BoardDAO - 오라클 연결 실패");
 			e.printStackTrace();
 		}
 	}
@@ -70,9 +71,100 @@ public class BoardDAO {
 			pstmt.close();
 			conn.close();
 		} catch (Exception e) {
-			System.out.println("☹글 목록 처리 중 에러 발생☹");
+			System.out.println("☹BoardDAO - 글 목록 처리 중 에러 발생☹");
 			e.printStackTrace();
 		}
 		return articleList;
+	}
+	
+	//글 번호 생성 메서드
+	private int getNewArticleNo() {
+		int aNo = 1;
+		try {
+			conn = dataFactory.getConnection();
+			//max함수를 이용하여 기존 articleNo중 가장 큰 값을 가져온다
+			String query = "select max(articleNo) from boardtbl";
+			pstmt = conn.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				aNo = rs.getInt(1)+1;
+			}
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 글 번호 생성 중 에러 발생☹");
+			e.printStackTrace();
+		}
+		return aNo;
+	}
+	
+	
+	//새 글 추가 메서드
+	public void insertNewArticle(ArticleVO articleVO) {
+		int articleNo = getNewArticleNo();
+		try {
+			conn = dataFactory.getConnection();
+			int parentNo = articleVO.getParentNo();
+			String title = articleVO.getTitle();
+			String content = articleVO.getContent();
+			String imageFileName = articleVO.getImageFileName();
+			String id = articleVO.getId();
+			String query = "insert into boardtbl (articleNo, parentNo, title, content, imageFileName, id) values(?,?,?,?,?,?)";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, articleNo);
+			pstmt.setInt(2, parentNo);
+			pstmt.setString(3, title);
+			pstmt.setString(4, content);
+			pstmt.setString(5, imageFileName);
+			pstmt.setString(6, id);
+			
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 테이블 추가 중 에러 발생☹");
+			e.printStackTrace();
+		}
+	}
+	
+	//선택한 글 상세 내용 메서드
+	public ArticleVO selectArticle(int articleNo) {
+		ArticleVO article = new ArticleVO();
+		try {
+			conn = dataFactory.getConnection();
+			String query = "select articleNo, parentNo, title, content, imageFileName"
+					+ " id, writeDate from boardtbl where articleNo=?";
+			pstmt=conn.prepareStatement(query);
+			pstmt.setInt(1, articleNo);
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			int _articleNo = rs.getInt("articleNo");
+			int parentNo = rs.getInt("parentNo");
+			String title = rs.getString("title");
+			String content = rs.getString("content");
+			String imageFileName = rs.getString("imageFileName");
+			if(imageFileName != null) {
+				imageFileName = URLEncoder.encode(rs.getString("imageFileName"), "utf-8");
+			}
+			String id = rs.getString("id");
+			Date writeDate = rs.getDate("writeDate");
+			
+			article.setArticleNo(_articleNo);
+			article.setParentNo(parentNo);
+			article.setTitle(title);
+			article.setContent(content);
+			article.setImageFileName(imageFileName);
+			article.setId(id);
+			article.setWriteDate(writeDate);
+			
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 상세 글을 불러오는 중 에러 발생☹");
+			e.printStackTrace();
+		}
+		return article;
 	}
 }
