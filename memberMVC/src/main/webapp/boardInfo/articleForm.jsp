@@ -26,7 +26,6 @@
 	//다른 액션을 submit
 	function toList(obj){
 		obj.action = "${contextPath}/board/listArticles.do";
-		obj.submit();
 	}
 </script>
 </head>

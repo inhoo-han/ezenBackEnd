@@ -101,7 +101,8 @@ public class BoardDAO {
 	
 	
 	//새 글 추가 메서드
-	public void insertNewArticle(ArticleVO articleVO) {
+	//      ↓여기변경
+	public int insertNewArticle(ArticleVO articleVO) {
 		int articleNo = getNewArticleNo();
 		try {
 			conn = dataFactory.getConnection();
@@ -126,6 +127,7 @@ public class BoardDAO {
 			System.out.println("☹BoardDAO - 테이블 추가 중 에러 발생☹");
 			e.printStackTrace();
 		}
+		return articleNo;
 	}
 	
 	//선택한 글 상세 내용 메서드
@@ -133,7 +135,7 @@ public class BoardDAO {
 		ArticleVO article = new ArticleVO();
 		try {
 			conn = dataFactory.getConnection();
-			String query = "select articleNo, parentNo, title, content, imageFileName"
+			String query = "select articleNo, parentNo, title, content, NVL(imageFileName, 'null') as imageFileName, "
 					+ " id, writeDate from boardtbl where articleNo=?";
 			pstmt=conn.prepareStatement(query);
 			pstmt.setInt(1, articleNo);
@@ -143,9 +145,9 @@ public class BoardDAO {
 			int parentNo = rs.getInt("parentNo");
 			String title = rs.getString("title");
 			String content = rs.getString("content");
-			String imageFileName = rs.getString("imageFileName");
-			if(imageFileName != null) {
-				imageFileName = URLEncoder.encode(rs.getString("imageFileName"), "utf-8");
+			String imageFileName = URLEncoder.encode(rs.getString("imageFileName"), "utf-8");
+			if(imageFileName.equals("null")) {
+				imageFileName = null;
 			}
 			String id = rs.getString("id");
 			Date writeDate = rs.getDate("writeDate");
@@ -166,5 +168,38 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 		return article;
+	}
+	
+	//글 수정하기 메서드
+	public void updateArticle(ArticleVO article) {
+		int articleNo = article.getArticleNo();
+		String title = article.getTitle();
+		String content = article.getContent();
+		String imageFileName = article.getImageFileName();
+		try {
+			conn = dataFactory.getConnection();
+			String query = "update boardtbl set title=?, content=?";
+			if(imageFileName != null && imageFileName.length() != 0) {
+				query += ", imageFileName=? ";
+				
+			}
+			query += " where articleNo=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			//이미지가 있으면 이미지가 세 번째 물음표, 없으면 articleNo가 세 번째
+			if(imageFileName != null && imageFileName.length() != 0) {
+				pstmt.setString(3, imageFileName);
+				pstmt.setInt(4, articleNo);
+			}else {
+				pstmt.setInt(3, articleNo);
+			}
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close(); 
+		} catch (Exception e) {
+			System.out.println("글 수정 중 에러!!");
+			e.printStackTrace();
+		}
 	}
 }
