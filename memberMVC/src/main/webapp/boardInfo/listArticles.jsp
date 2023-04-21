@@ -11,6 +11,30 @@
 <head>
 <meta charset="UTF-8">
 <title>글 목록창</title>
+<style type="text/css">
+	tr th{
+		height: 50px;
+		color: #fff;
+	}
+	.btn_write{
+		margin: 30px auto;
+		height: 50px;
+		width: 150px;
+		line-height: 50px;
+		border-radius: 25px;
+		border: 1px solid #ddd;
+	}
+	.btn_write a{
+		text-decoration: none;
+		color: #333;
+	}
+	.btn_write:hover{
+		background: lightpink;
+	}
+	.btn_write:hover a{
+		color: #fff;
+	}
+</style>
 </head>
 <body bgcolor="#eee" align="center">
 	<h2 align="center">😎계층형 게시판 만들기😎</h2>
@@ -29,7 +53,7 @@
 			<c:when test="${!empty articleList}">
 				<c:forEach var="article" items="${articleList}" varStatus="articleNum">
 					<tr align="center">
-						<td width="5%">${articleNum.count}</td>
+						<td width="8%">${articleNum.count}</td>
 						<td width="10%">${article.id}</td>
 						<td width="50%" align="left">
 							<span style="padding-left: 10px"></span>
@@ -51,6 +75,6 @@
 			</c:when>
 		</c:choose>
 	</table>
-	<p align="center"><a href="${contextPath}/board/articleForm.do">글쓰기</a></p>
+	<p class="btn_write" align="center"><a href="${contextPath}/board/articleForm.do">글쓰기</a></p>
 </body>
 </html>

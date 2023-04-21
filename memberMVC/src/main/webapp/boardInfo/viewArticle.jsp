@@ -25,6 +25,17 @@
 	textarea{
 		resize: none;
 	}
+	input[type=button], input[type=submit]{
+		height: 50px;
+		width: 150px;
+		line-height: 50px;
+		border-radius: 25px;
+		border: 1px solid #ddd;
+	}
+	input[type=button]:hover, input[type=submit]:hover{
+		background: lightpink;
+		color: #fff;
+	}
 </style>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript">
@@ -66,6 +77,40 @@
 	function toList(obj){
 		obj.action="${contextPath}/board/viewArticle.do?articleNo=${article.articleNo}";
 		obj.submit();
+	}
+	/* 삭제하기 */
+	function fn_remove_article(url, articleNo) {
+		//d_form이라는 폼을 태그로 생성
+		let d_form = document.createElement("form");
+		d_form.setAttribute("method", "post");
+		d_form.setAttribute("action", url);	//url:'${contextPath}/board/removeArticle.do'
+		//글번호 받을 input태그 생성
+		let articleNoInput = document.createElement("input");
+		articleNoInput.setAttribute("type", "hidden");
+		articleNoInput.setAttribute("name", "articleNo");	//"articleNo": articleNo라는 글자가 들어감
+		articleNoInput.setAttribute("value", articleNo);	//articleNo: 매개변수articleNo에 담긴 값이 들어감
+		//노드를 연결하는 작업
+		d_form.appendChild(articleNoInput);
+		document.body.appendChild(d_form);
+		//BoardController로 보내주는 작업
+		d_form.submit();
+	}
+	/* 답글달기 */
+	function fn_reply_form(url, parentNo){
+		//삭제하기와 내용이 비슷해 복붙후 수정
+		let d_form = document.createElement("form");
+		d_form.setAttribute("method", "post");
+		d_form.setAttribute("action", url);	//url:'${contextPath}/board/replyForm.do'
+		//글번호 받을 input태그 생성
+		let parentNoInput = document.createElement("input");
+		parentNoInput.setAttribute("type", "hidden");
+		parentNoInput.setAttribute("name", "parentNo");	//"articleNo": articleNo라는 글자가 들어감
+		parentNoInput.setAttribute("value", parentNo);	//articleNo: 매개변수articleNo에 담긴 값이 들어감
+		//노드를 연결하는 작업
+		d_form.appendChild(parentNoInput);
+		document.body.appendChild(d_form);
+		//BoardController로 보내주는 작업
+		d_form.submit();
 	}
 </script>
 </head>

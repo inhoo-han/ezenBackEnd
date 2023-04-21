@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -48,6 +49,7 @@ public class BoardController extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
 		String nextPage = "";
 		PrintWriter out; //230420추가
+		HttpSession session; //230421추가
 		String action = request.getPathInfo(); //요청(매핑)명을 가져온다.
 		System.out.println("요청 매핑 이름 : " + action);
 		//getPathInfo요청을 처리하면서 에러가 발생할 수 있다.
@@ -141,6 +143,66 @@ public class BoardController extends HttpServlet {
 				out.print("</script>");
 				return;
 			}
+			//게시물 삭제버튼 클릭시
+			else if(action.equals("/removeArticle.do")) {
+				//"articleNo"라는 매개변수의 값을 가져올게용. input은 무조건 String형태라 형변환 했어용.
+				int articleNo = Integer.parseInt(request.getParameter("articleNo"));
+				//내 글번호를 parentNo로 가지고 있는 애들까지 데리고 와야 하므로 List로 받는다.
+				List<Integer> articleNoList = boardService.removeArticle(articleNo);
+				for(int no : articleNoList) {
+					//imgDir: 이미지가 들어있는 곳
+					File imgDir = new File(IMG_REPO + "\\" + no);
+					if(imgDir.exists()) {
+						FileUtils.deleteDirectory(imgDir);
+					}
+				}
+				out = response.getWriter();
+				out.print("<script>");
+				out.print("alert('🤗글을 삭제하였습니다.🤗');");
+				out.print("location.href='" + request.getContextPath() + "/board/listArticles.do';");
+				out.print("</script>");
+				return;
+			}
+			//답글쓰기 버튼 클릭시
+			else if(action.equals("/replyForm.do")) {
+				int parentNo = Integer.parseInt(request.getParameter("parentNo"));
+				System.out.println("✔✔답글쓸 부모의 번호 :" + parentNo);
+				//getSession(): 세션있?불러와. 세션없?만들어.
+				session = request.getSession();
+				session.setAttribute("parentNo", parentNo);
+				nextPage = "/boardInfo/replyForm.jsp";
+			}
+			//답글쓰기 > 답글반영하기 버튼 클릭시
+			else if(action.equals("/addReply.do")) {
+				session = request.getSession();
+				int parentNo=(Integer)session.getAttribute("parentNo");
+				session.removeAttribute("parentNo");
+				Map<String, String> articleMap = upload(request, response);
+				String title = articleMap.get("title");
+				String content = articleMap.get("content");
+				String imageFileName = articleMap.get("imageFileName");
+				articleVO.setParentNo(parentNo);
+				articleVO.setId("hello");
+				articleVO.setTitle(title);
+				articleVO.setContent(content);
+				articleVO.setImageFileName(imageFileName);
+				int articleNo = boardService.addReply(articleVO);
+				//답글에 이미지 첨부했는지 여부 파악
+				if(imageFileName != null && imageFileName.length() != 0) {
+					File srcFile = new File(IMG_REPO + "\\temp\\" + imageFileName);
+					File destDir = new File(IMG_REPO + "\\" + articleNo);
+					destDir.mkdir();
+					FileUtils.moveFileToDirectory(srcFile, destDir, true);
+					
+				}
+				out = response.getWriter();
+				out.print("<script>");
+				out.print("alert('🤗답글을 등록하였습니다.🤗');");
+				out.print("location.href='" + request.getContextPath() + "/board/viewArticle.do?articleNo=" + articleNo + "';");
+				out.print("</script>");
+				return;
+			}
+			
 			RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
 			dispatcher.forward(request, response);
 		} catch (Exception e) {

@@ -43,7 +43,7 @@ public class BoardDAO {
 			conn = dataFactory.getConnection();
 			String query = "select LEVEL, articleNo, parentNo, title, content, writeDate, " + 
 				"id from boardtbl START WITH parentNo = 0 CONNECT BY PRIOR articleNo = parentNo " +
-				"ORDER SIBLINGS BY articleNo";
+				"ORDER SIBLINGS BY articleNo desc";
 			pstmt = conn.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery();	//조회하는 ResultSet
 			while(rs.next()) {
@@ -198,7 +198,49 @@ public class BoardDAO {
 			pstmt.close();
 			conn.close(); 
 		} catch (Exception e) {
-			System.out.println("글 수정 중 에러!!");
+			System.out.println("☹BoardDAO -글 수정 중 에러 발생☹");
+			e.printStackTrace();
+		}
+	}
+	
+	//삭제하기 전 삭제할 글번호 목록 가져오기
+	public List<Integer> selectRemovedArticles(int articleNo){
+		List<Integer> articleNoList = new ArrayList<Integer>();
+		try {
+			conn = dataFactory.getConnection();
+			String query = "select articleNo from boardtbl START WITH articleNo=? "
+					+ "CONNECT BY PRIOR articleNo=parentNo";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, articleNo);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				articleNo = rs.getInt("articleNo");
+				articleNoList.add(articleNo);
+			}
+			pstmt.close();
+			rs.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 삭제할 글 번호 목록 가져오는 중 에러 발생☹");
+			e.printStackTrace();
+		}
+		return articleNoList;
+	}
+	
+	//진짜로 삭제하기
+	public void deleteArticle(int articleNo) {
+		try {
+			conn = dataFactory.getConnection();
+			String query = "delete from boardtbl where articleNo in "
+					+ "(select articleNo from boardtbl START WITH articleNo=? "
+					+ "CONNECT BY articleNo=parentNo)";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, articleNo);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 글 삭제 중 에러 발생☹");
 			e.printStackTrace();
 		}
 	}

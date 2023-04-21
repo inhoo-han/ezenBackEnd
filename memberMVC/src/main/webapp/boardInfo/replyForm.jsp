@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     isELIgnored="false"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <%
 	request.setCharacterEncoding("utf-8");
@@ -10,8 +11,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>글쓰기 창</title>
+<title>답글 쓰기 창</title>
 <style type="text/css">
+	#tr_button_modify{
+		display: none;
+	}
 	td{
 		border-radius: 3px;
 	}
@@ -45,20 +49,23 @@
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
-	
-	//다른 액션을 submit
+	/* 답글달기 버튼 후 취소 눌렀을 때 */
 	function toList(obj){
-		obj.action = "${contextPath}/board/listArticles.do";
+		obj.action = "${contextPath}/board/viewArticle.do?articleNo=${parentNo}";
 		obj.submit();
 	}
 </script>
 </head>
 <body bgcolor="#eee" align="center">
 	<h2 align="center">😎계층형 게시판 만들기😎</h2>
-	<h3 align="center"><i>ㅡ글쓰기 창ㅡ</i></h3>
+	<h3 align="center"><i>ㅡ답글쓰기 창ㅡ</i></h3>
 	<hr>
-	<form action="${contextPath}/board/addArticle.do" method="post" enctype="multipart/form-data">
-		<table align="center" >
+	<form action="${contextPath}/board/addReply.do" method="post" enctype="multipart/form-data">
+		<table align="center">
+			<tr>
+				<td class="title" width="150" align="center" bgcolor="slateblue">글쓴이</td>
+				<td colspan="2"><input type="text" value="hello" size="50" disabled></td>
+			</tr>
 			<tr>
 				<td class="title" width="150" align="center" bgcolor="slateblue">글 제목</td>
 				<td colspan="2"><input type="text" name="title" size="50"></td>
@@ -76,8 +83,8 @@
 			</tr>
 			<tr>
 				<td colspan="3">
-					<input type="submit" value="등록하기">
-					<input type="button" value="목록보기" onclick="toList(this.form)">
+					<input type="submit" value="답글반영하기">
+					<input type="button" value="취소" onclick="toList(this.form)">
 				</td>
 			</tr>
 		</table>
