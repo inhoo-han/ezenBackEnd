@@ -1,6 +1,8 @@
 package memberMVC.board;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BoardService {
 	BoardDAO boardDAO;
@@ -8,6 +10,20 @@ public class BoardService {
 	public BoardService() {
 		//생성자에서 BoardDAO객체를 생성
 		boardDAO = new BoardDAO();
+	}
+	
+	//230425추가
+	public Map listArticles(Map<String, Integer> pagingMap) {
+		Map articleMap = new HashMap();
+		List<ArticleVO> articleList = boardDAO.selectAllArticles(pagingMap);
+		
+		int totArticles = boardDAO.selectToArticles();
+		System.out.println("totArticles: " + totArticles);
+		articleMap.put("articleList", articleList);
+		articleMap.put("totArticles", totArticles);
+//		articleMap.put("totArticles", 150);
+		
+		return articleMap;
 	}
 	
 	//BoardController-매핑(/listArticles.do or null)

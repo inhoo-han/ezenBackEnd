@@ -3,6 +3,10 @@
     isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="articleList" value="${articleMap.articleList}"/>
+<c:set var="totArticles" value="${articleMap.totArticles}"/>
+<c:set var="section" value="${articleMap.section}"/>
+<c:set var="pageNum" value="${articleMap.pageNum}"/>
 <%
 	request.setCharacterEncoding("utf-8");
 %>
@@ -24,7 +28,7 @@
 		border-radius: 25px;
 		border: 1px solid #ddd;
 	}
-	.btn_write a{
+	a{
 		text-decoration: none;
 		color: #333;
 	}
@@ -33,6 +37,14 @@
 	}
 	.btn_write:hover a{
 		color: #fff;
+	}
+	.selPage {
+		color: slateblue;
+		font-weight: bold;
+	}
+	.noLine{
+		color: black;
+		font-weight: normarl;
 	}
 </style>
 </head>
@@ -53,7 +65,7 @@
 			<c:when test="${!empty articleList}">
 				<c:forEach var="article" items="${articleList}" varStatus="articleNum">
 					<tr align="center">
-						<td width="8%">${articleNum.count}</td>
+						<td width="5%">${articleNum.count}</td>
 						<td width="10%">${article.id}</td>
 						<td width="50%" align="left">
 							<span style="padding-left: 10px"></span>
@@ -75,6 +87,47 @@
 			</c:when>
 		</c:choose>
 	</table>
+	<div align="center">
+		<c:if test="${totArticles != 0}">
+			<c:choose>
+				<c:when test="${totArticles > 100}">
+					<c:forEach var="page" begin="1" end="10" step="1">
+						<c:if test="${section > 1 && page == 1}">
+							<a href="${contextPath}/board/listArticles.do?section=${section-1}&pageNum=${(section-1)*10+1}"> prev </a>
+						</c:if>
+						<a href="${contextPath}/board/listArticles.do?section=${section}&pageNum=${page}">${(section-1)*10+page}</a>
+						<c:if test="${page == 10}">
+							<a href="${contextPath}/board/listArticles.do?section=${section+1}&pageNum=${section*10+1}"> next </a>
+						</c:if>
+					</c:forEach>
+				</c:when>
+				<c:when test="${totArticles % 10 != 0}">
+					<c:forEach var="page" begin="1" end="${totArticles/10 + 1}" step="1">
+						<c:choose>
+							<c:when test="${page==pageNum}">
+								<a class="selPage" href="${contextPath}/board/listArticles.do?section=${section}&pageNum=${page}">${page}</a>
+							</c:when>
+							<c:otherwise>
+								<a class="noLine" href="${contextPath}/board/listArticles.do?section=${section}&pageNum=${page}">${page}</a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:when>
+				<c:when test="${totArticles % 10 == 0}">
+					<c:forEach var="page" begin="1" end="${totArticles/10}" step="1">
+						<c:choose>
+							<c:when test="${page==pageNum}">
+								<a class="selPage" href="${contextPath}/board/listArticles.do?section=${section}&pageNum=${page}">${page}</a>
+							</c:when>
+							<c:otherwise>
+								<a class="noLine" href="${contextPath}/board/listArticles.do?section=${section}&pageNum=${page}">${page}</a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:when>
+			</c:choose>
+		</c:if>
+	</div>
 	<p class="btn_write" align="center"><a href="${contextPath}/board/articleForm.do">글쓰기</a></p>
 </body>
 </html>

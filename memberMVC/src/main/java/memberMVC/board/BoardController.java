@@ -56,8 +56,20 @@ public class BoardController extends HttpServlet {
 		try {
 			List<ArticleVO> articleList = new ArrayList<ArticleVO>();
 			if (action == null || action.equals("/listArticles.do")) {
-				articleList = boardService.listArticles();
-				request.setAttribute("articleList", articleList);
+				//230425추가
+				String _section = request.getParameter("section");
+				String _pageNum = request.getParameter("pageNum");
+				int section = Integer.parseInt((_section == null)? "1" : _section);
+				int pageNum = Integer.parseInt((_pageNum == null)? "1" : _pageNum);
+				Map<String, Integer> pagingMap = new HashMap<String, Integer>();
+				pagingMap.put("section", section);
+				pagingMap.put("pageNum", pageNum);
+				Map articleMap = boardService.listArticles(pagingMap);
+				articleMap.put("section", section);
+				articleMap.put("pageNum", pageNum);
+				System.out.println("section : " + section);
+				System.out.println("pageNum : " + pageNum);
+				request.setAttribute("articleMap", articleMap);
 				nextPage = "/boardInfo/listArticles.jsp";
 			}
 			else if(action.equals("/articleForm.do")) {

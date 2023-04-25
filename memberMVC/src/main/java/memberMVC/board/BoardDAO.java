@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -30,12 +31,81 @@ public class BoardDAO {
 			dataFactory = (DataSource)envContext.lookup("jdbc/oracle");
 			
 		} catch (Exception e) {
-			System.out.println("BoardDAO - 오라클 연결 실패");
+			System.out.println("☹BoardDAO - 오라클 연결 실패☹");
 			e.printStackTrace();
 		}
 	}
 	
 	//[메서드]
+	
+	//230425추가
+	public List selectAllArticles(Map<String , Integer> pagingMap) {
+		List<ArticleVO> articleList = new ArrayList<ArticleVO>();
+		int section = pagingMap.get("section");
+		int pageNum = pagingMap.get("pageNum");
+		try {
+			conn = dataFactory.getConnection();
+			String query = "SELECT * FROM (SELECT ROWNUM AS recNum, LVL, articleNo, "
+					+ "parentNo, title, id, writeDate FROM (SELECT LEVEL AS LVL, articleNo, "
+					+ "parentNo, title, id, writeDate FROM boardtbl START WITH parentNo = 0 "
+					+ "CONNECT BY PRIOR articleNo=parentNo ORDER SIBLINGS BY articleNo DESC)) "
+					+ "WHERE recNum BETWEEN (?-1)*100 + (?-1)*10 + 1 AND (?-1)*100 + ?*10 ";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, section);
+			pstmt.setInt(2, pageNum);
+			pstmt.setInt(3, section);
+			pstmt.setInt(4, pageNum);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				int level = rs.getInt("LVL");
+				int articleNo = rs.getInt("articleNo");
+				int parentNo = rs.getInt("parentNo");
+				String title = rs.getString("title");
+				String id = rs.getString("id");
+				Date writeDate = rs.getDate("writeDate");
+				
+				ArticleVO articleVO = new ArticleVO();
+				articleVO.setLevel(level);
+				articleVO.setArticleNo(articleNo);
+				articleVO.setParentNo(parentNo);
+				articleVO.setTitle(title);
+				articleVO.setId(id);
+				articleVO.setWriteDate(writeDate);
+				
+				articleList.add(articleVO);
+			}
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 글 목록 페이징 조회 중 에러 발생☹");
+			e.printStackTrace();
+		}
+		return articleList;
+	}
+	
+	//전체 글 목록 수 반환하는 메서드
+	public int selectToArticles() {
+		int totCount = 0;
+		try {
+			conn = dataFactory.getConnection();
+			String query = "SELECT COUNT(articleNo) FROM boardtbl";
+			pstmt = conn.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				totCount = rs.getInt(1);
+			}
+			rs.close();
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("☹BoardDAO - 글 목록 수 처리 중 에러 발생☹");
+			e.printStackTrace();
+		}
+		return totCount;
+	}
+	
+	
 	//글 목록 보기 메서드
 	public List<ArticleVO> selectAllArticles(){
 		List<ArticleVO> articleList = new ArrayList<>();
