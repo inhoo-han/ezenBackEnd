@@ -8,5 +8,5 @@ import com.spring.member.vo.MemberVO;
 
 public interface MemberDAO {
 	public List selectAllMembers() throws DataAccessException;
-	public void addMember(MemberVO memVo) throws DataAccessException;
+	public void addMember(MemberVO memVO) throws DataAccessException;
 }

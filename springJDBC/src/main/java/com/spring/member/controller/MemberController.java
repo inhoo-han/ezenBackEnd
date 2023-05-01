@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 public interface MemberController {
-	//인터페이스의 추상메서드
-	public ModelAndView listMembers(HttpServletRequest request, HttpServletResponse response) throws Exception; 
-	public ModelAndView addMember(HttpServletRequest request, HttpServletResponse response) throws Exception; 
-	public ModelAndView memberForm(HttpServletRequest request, HttpServletResponse response) throws Exception; 
+	//ModelAndView 가 리턴값 listMembers가 메서드
+	public ModelAndView listMembers(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public ModelAndView addMember(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public ModelAndView MemberForm(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

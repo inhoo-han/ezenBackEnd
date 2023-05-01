@@ -10,24 +10,24 @@
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
   <listener>
-  	<listener-class>
-  		org.springframework.web.context.ContextLoaderListener
-  	</listener-class>
+     <listener-class>
+        org.springframework.web.context.ContextLoaderListener
+     </listener-class>
   </listener>
   <context-param>
-  	<param-name>>contextConfigLocation</param-name>
-  	<param-value>
-  		/WEB-INF/config/action-service.xml
-  		/WEB-INF/config/action-dataSource.xml
-  	</param-value>
+     <param-name>contextConfigLocation</param-name>
+     <param-value>
+        /WEB-INF/config/action-service.xml
+        /WEB-INF/config/action-dataSource.xml
+     </param-value>
   </context-param>
-   <servlet>
-  	<servlet-name>action</servlet-name>
-  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-  	<load-on-startup>1</load-on-startup>
+    <servlet>
+     <servlet-name>action</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>action</servlet-name>
-  	<url-pattern>*.do</url-pattern>
+     <servlet-name>action</servlet-name>
+     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
 </web-app>
